@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Semáforo Inteligente</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <header>
+        <h1>Painel do Semáforo Inteligente</h1>
+    </header>
+    <main>
+        <section id="controles">
+            <h2>Controles</h2>
+            <label for="modoNoturno">Modo Noturno:</label>
+            <input type="checkbox" id="modoNoturno">
+            <button id="mudarEstado">Forçar Mudança de Estado</button>
+        </section>
+        <section id="monitoramento">
+            <h2>Monitoramento em Tempo Real</h2>
+            <p>LDR Atual: <span id="ldrValor">0</span> lux</p>
+            <p>Estado do Semáforo: <span id="estadoSemaforo">Desconhecido</span></p>
+            <div id="logs">
+                <h3>Logs</h3>
+                <ul id="logList"></ul>
+            </div>
+        </section>
+    </main>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
