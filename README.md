@@ -41,9 +41,16 @@ Tictitas (grupo 5)
 ---
 
 ## Montagem Física
+Semáforo: mestre
+- LED Vermelho → `GPIO 14` 
+- LED Amarelo → `GPIO 27`  
+- LED Verde → `GPIO 26`  
+- LDR (divisor de tensão) → `GPIO ANALÓGICO 34`
 
-
----
+Semáforo: escravo
+- LED Vermelho → `GPIO 14` 
+- LED Amarelo → `GPIO 27`  
+- LED Verde → `GPIO 26`  
 
 ## Lógica do Semáforo
 
@@ -53,9 +60,9 @@ Tictitas (grupo 5)
 - Se um semáforo ficar verde, o outro vai automaticamente para vermelho
 
 ### Modo Noturno
-- Semáforos piscam **amarelo** lentamente  
-- Ativado com baixa luminosidade detectada pelo LDR  
-- Pode ser ativado também pela **interface web**
+- Verde → Amarelo → Vermelho  (maior tempo no verde)
+- Trocas de tempo baseada no fluxo detectado pelo LDR  
+- Se um semáforo ficar verde, o outro vai automaticamente para vermelho
 
 ---
 
