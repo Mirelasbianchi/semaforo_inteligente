@@ -10,6 +10,7 @@ Além disso, o sistema conta com uma **interface online** para controlar parâme
 Tictitas (grupo 5)
 
 ## Arquitetura do projeto
+```
 ├── firmware/
 │   ├── semaforo1.ino
 │   └── semaforo2.ino
@@ -17,7 +18,8 @@ Tictitas (grupo 5)
 │   ├── index.html
 │   └── script.js
 ├── README.md
-│   ├── video-demo.mp4
+└── video-demo.mp4
+```
 
 ## Objetivos
 - Montar dois semáforos físicos com LEDs e ESP32.  
@@ -40,22 +42,6 @@ Tictitas (grupo 5)
 
 ## Montagem Física
 
-### Conexões do ESP32 (por semáforo)
-- LED Vermelho → `GPIO XX`  
-- LED Amarelo → `GPIO XX`  
-- LED Verde → `GPIO XX`  
-- LDR (divisor de tensão) → `GPIO ANALÓGICO XX`
-
-> *Substitua os "XX" pelos pinos usados.*
-
-### Funcionamento do LDR
-- Alta iluminação → pouca resistência → leitura analógica baixa  
-- Baixa iluminação → alta resistência → leitura analógica alta  
-
-O sistema interpreta:
-
-- **Leitura alta** → “Modo Noturno”  
-- **Oscilação rápida** → veículo detectado  
 
 ---
 
