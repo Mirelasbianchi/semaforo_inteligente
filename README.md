@@ -10,6 +10,7 @@ Além disso, o sistema conta com uma **interface online** para controlar parâme
 Tictitas (grupo 5)
 
 ## Arquitetura do projeto
+```
 ├── firmware/
 │   ├── semaforo1.ino
 │   └── semaforo2.ino
@@ -18,6 +19,7 @@ Tictitas (grupo 5)
 │   └── script.js
 ├── README.md
 └── video-demo.mp4
+```
 
 ## Objetivos
 - Montar dois semáforos físicos com LEDs e ESP32.  
