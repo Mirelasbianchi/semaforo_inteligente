@@ -76,11 +76,7 @@ A interface permite:
   - Estado atual do semáforo  
   - Atualizações entre os ESP32  
 
-### Link da Interface
-`https://seu-link-aqui.com`
-
 ## Demonstração do Projeto
- *Adicione aqui o vídeo exigido pela atividade*  
-`https://youtu.be/seu-video-aqui`
+[Vídeo](https://drive.google.com/file/d/1e7c_K12cRg1udbEiXFyUCxqOk77cMoaf/view?usp=sharing)
 
 
