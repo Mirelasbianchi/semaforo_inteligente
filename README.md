@@ -1,7 +1,7 @@
 # 🟢🔴 Semáforo Inteligente com 2 ESP32 — Projeto IoT
 
 ## Sobre o Projeto
-Este projeto implementa um sistema de semáforos inteligentes utilizando **dois ESP32, cada um controlando um semáforo independente. Sensores LDR são usados para detectar a presença de veículos e para alternar automaticamente para o **modo noturno** quando a luminosidade do ambiente diminui.
+Este projeto implementa um sistema de semáforos inteligentes utilizando dois ESP32, cada um controlando um semáforo independente. Os ESP32 são conectados via MQTT utilizando broker público. Sensores LDR são usados para detectar a presença de veículos e para alternar automaticamente para o **modo noturno** quando a luminosidade do ambiente diminui.
 
 Além disso, o sistema conta com uma interface online para controlar parâmetros do semáforo e visualizar em tempo real os dados captados.
 
@@ -27,6 +27,7 @@ Tictitas (grupo 5)
 - Aplicar lógica de controle com modo normal e modo noturno.  
 - Sincronizar comunicação entre os dois ESP32.  
 - Criar uma interface web simples para ajustes do sistema.  
+- Utilizar um broker público para conectar os ESP32 via protocolo MQTT.
 
 ---
 
@@ -74,7 +75,67 @@ A interface permite:
   - Estado atual do semáforo  
   - Atualizações entre os ESP32  
 
+Abaixo, seguem imagens da interface web.
+
+<div align="center">
+<sub>Figura 01: Modo noturno.</sub>
+</div>
+<div align="center">
+<img src="../semaforo_inteligente/assets/modo_noturno.png" alt="Modo noturno" style="max-width:900px; width:100%; height:auto;">
+</div>
+
+<div align="center">
+<sub>Fonte: material produzido pela equipe, 2025.</sub>
+</div>
+
+<div align="center">
+<sub>Figura 02: Modo diurno.</sub>
+</div>
+<div align="center">
+<img src="../semaforo_inteligente/assets/modo_diurno.png" alt="Modo diurno" style="max-width:900px; width:100%; height:auto;">
+</div>
+
+<div align="center">
+<sub>Fonte: material produzido pela equipe, 2025.</sub>
+</div>
+
+<div align="center">
+<sub>Figura 03: Visão geral do website.</sub>
+</div>
+<div align="center">
+<img src="../semaforo_inteligente/assets/site.png" alt="Website - 1" style="max-width:900px; width:100%; height:auto;">
+</div>
+
+<div align="center">
+<sub>Fonte: material produzido pela equipe, 2025.</sub>
+</div>
+
+<div align="center">
+<sub>Figura 04: Visão do website.</sub>
+</div>
+<div align="center">
+<img src="../semaforo_inteligente/assets/web.png" alt="Website - 2" style="max-width:900px; width:100%; height:auto;">
+</div>
+
+<div align="center">
+<sub>Fonte: material produzido pela equipe, 2025.</sub>
+</div>
+
 ## Demonstração do Projeto
-[Vídeo](https://drive.google.com/file/d/1e7c_K12cRg1udbEiXFyUCxqOk77cMoaf/view?usp=sharing)
+
+Aqui, pode-se observar o [vídeo](https://drive.google.com/file/d/1e7c_K12cRg1udbEiXFyUCxqOk77cMoaf/view?usp=sharing) demonstrativo do semáforo em funcionamento.
+
+No vídeo, mostram-se o funcionamento do semáforo fisicamente, o monitor serial dos computadores e o site em funcionamento. No vídeo, o sensor LDR é iluminado com uma lanterna de celular, o que faz suas leituras aumentarem (como visto no monitor serial do master) e os semáforos mudarem para o modo diurno. Sem isso, o semáforo funciona em modo noturno.
+
+<div align="center">
+<sub>Figura 05: Visão do monitor serial do slave.</sub>
+</div>
+<div align="center">
+<img src="../semaforo_inteligente/assets/serial.png" alt="Visão do monitor serial do slave" style="max-width:900px; width:100%; height:auto;">
+</div>
+
+<div align="center">
+<sub>Fonte: material produzido pela equipe, 2025.</sub>
+</div>
 
 

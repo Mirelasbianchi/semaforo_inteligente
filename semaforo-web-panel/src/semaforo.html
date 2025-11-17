@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semáforo Inteligente</title>
+  <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #0f2847 50%, #1a3a5c 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .header p {
+      color: #93c5fd;
+      margin-top: 0.5rem;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .status-connected {
+      background: #34d399;
+      box-shadow: 0 0 10px #34d399;
+    }
+
+    .status-disconnected {
+      background: #f87171;
+      box-shadow: 0 0 10px #f87171;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 1rem;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header svg {
+      color: #60a5fa;
+    }
+
+    .card-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .current-status {
+      background: rgba(30, 58, 138, 0.3);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .status-label {
+      font-size: 0.875rem;
+      color: #93c5fd;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .mode-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .mode-icon.day {
+      background: rgba(245, 158, 11, 0.2);
+      border: 2px solid #f59e0b;
+    }
+
+    .mode-icon.night {
+      background: rgba(99, 102, 241, 0.2);
+      border: 2px solid #6366f1;
+    }
+
+    .mode-info h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .mode-info p {
+      font-size: 0.875rem;
+      color: #93c5fd;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-button {
+      height: 140px;
+      border: 2px solid;
+      border-radius: 0.75rem;
+      background: none;
+      cursor: pointer;
+      font-size: 1.125rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .mode-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .mode-button svg {
+      width: 48px;
+      height: 48px;
+    }
+
+    .day-button {
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+      background: rgba(120, 53, 15, 0.2);
+    }
+
+    .day-button:hover:not(:disabled) {
+      border-color: rgba(245, 158, 11, 0.5);
+      background: rgba(120, 53, 15, 0.4);
+    }
+
+    .day-button.active {
+      border-color: #f59e0b;
+      background: #d97706;
+      color: #fff;
+    }
+
+    .night-button {
+      border-color: rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      background: rgba(49, 46, 129, 0.2);
+    }
+
+    .night-button:hover:not(:disabled) {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(49, 46, 129, 0.4);
+    }
+
+    .night-button.active {
+      border-color: #6366f1;
+      background: #4f46e5;
+      color: #fff;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-card-label {
+      font-size: 0.875rem;
+      color: #93c5fd;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-card-value {
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      color: #fff;
+    }
+
+    .instructions h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .instructions ul {
+      list-style: none;
+      font-size: 0.875rem;
+      color: #bfdbfe;
+    }
+
+    .instructions li {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .instructions li::before {
+      content: "•";
+      color: #60a5fa;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .mode-info h3 {
+        font-size: 1.5rem;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Controle do semáforo inteligente</h1>
+        <p>Monitore e controle seu sistema de semáforos baseado em ESP32</p>
+      </div>
+      <div class="status-badge">
+        <div class="status-indicator" id="statusIndicator"></div>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </div>
+
+    <!-- Main Control Panel -->
+    <div class="card">
+      <div class="card-header">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+        </svg>
+        <h2>Controle de modo</h2>
+      </div>
+
+      <!-- Current Status -->
+      <div class="current-status">
+        <div class="status-label">Modo atual</div>
+        <div class="status-content">
+          <div class="mode-icon" id="modeIcon">☀️</div>
+          <div class="mode-info">
+            <h3 id="modeText">MODO DIURNO</h3>
+            <p id="modeDetails">Vermelho: 6s • Amarelo: 2s • Verde: 4s</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode Selection Buttons -->
+      <div class="button-grid">
+        <button class="mode-button day-button" id="dayButton" onclick="setMode('DAY')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span>MODO DIURNO</span>
+        </button>
+
+        <button class="mode-button night-button" id="nightButton" onclick="setMode('NIGHT')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span>MODO NOTURNO</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- System Information -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-label">MQTT Broker</div>
+        <div class="info-card-value">broker.hivemq.com</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Tópico</div>
+        <div class="info-card-value">semaforo/mode</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Última mensagem</div>
+        <div class="info-card-value" id="lastMessage">Waiting...</div>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="card instructions">
+      <h3>Como funciona?</h3>
+      <ul>
+        <li>O ESP32 Mestre lê o sensor LDR e publica o modo automático.</li>
+        <li>Use os botões acima para manualmente controlar ambos os semáforos</li>
+        <li>Tanto o mestre quanto o escravo ESP32 irão responder aos comandos deste painel</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let client = null;
+    let currentMode = 'DAY';
+
+    // Connect to MQTT broker
+    function connectMQTT() {
+      const brokerUrl = 'wss://broker.hivemq.com:8884/mqtt';
+      client = mqtt.connect(brokerUrl);
+
+      client.on('connect', () => {
+        console.log('Connected to MQTT broker');
+        updateConnectionStatus(true);
+        
+        // Subscribe to mode topic
+        client.subscribe('semaforo/mode', (err) => {
+          if (!err) {
+            console.log('Subscribed to semaforo/mode');
+          } else {
+            console.error('Subscription error:', err);
+          }
+        });
+      });
+
+      client.on('message', (topic, message) => {
+        const msg = message.toString();
+        console.log('Received message:', msg);
+        document.getElementById('lastMessage').textContent = msg;
+        
+        if (msg === 'DAY' || msg === 'NIGHT') {
+          updateMode(msg);
+        }
+      });
+
+      client.on('error', (err) => {
+        console.error('MQTT error:', err);
+        updateConnectionStatus(false);
+      });
+
+      client.on('close', () => {
+        console.log('Disconnected from MQTT broker');
+        updateConnectionStatus(false);
+      });
+    }
+
+    function updateConnectionStatus(connected) {
+      const indicator = document.getElementById('statusIndicator');
+      const text = document.getElementById('statusText');
+      const dayButton = document.getElementById('dayButton');
+      const nightButton = document.getElementById('nightButton');
+
+      if (connected) {
+        indicator.className = 'status-indicator status-connected';
+        text.textContent = 'Conectado';
+        dayButton.disabled = false;
+        nightButton.disabled = false;
+      } else {
+        indicator.className = 'status-indicator status-disconnected';
+        text.textContent = 'Desconectado';
+        dayButton.disabled = true;
+        nightButton.disabled = true;
+      }
+    }
+
+    function updateMode(mode) {
+      currentMode = mode;
+      const modeIcon = document.getElementById('modeIcon');
+      const modeText = document.getElementById('modeText');
+      const modeDetails = document.getElementById('modeDetails');
+      const dayButton = document.getElementById('dayButton');
+      const nightButton = document.getElementById('nightButton');
+
+      if (mode === 'DAY') {
+        modeIcon.textContent = '☀️';
+        modeIcon.className = 'mode-icon day';
+        modeText.textContent = 'MODO DIURNO';
+        modeDetails.textContent = 'Vermelho: 6s • Amarelo: 2s • Verde: 4s';
+        dayButton.classList.add('active');
+        nightButton.classList.remove('active');
+      } else {
+        modeIcon.textContent = '🌙';
+        modeIcon.className = 'mode-icon night';
+        modeText.textContent = 'MODO NOTURNO';
+        modeDetails.textContent = 'Vermelho: 4s • Amarelo: 2s • Verde: 6s';
+        dayButton.classList.remove('active');
+        nightButton.classList.add('active');
+      }
+    }
+
+    function setMode(mode) {
+      if (client && client.connected) {
+        client.publish('semaforo/mode', mode, (err) => {
+          if (err) {
+            console.error('Publish error:', err);
+          } else {
+            console.log('Published mode:', mode);
+            updateMode(mode);
+          }
+        });
+      }
+    }
+
+    // Connect on page load
+    connectMQTT();
+  </script>
+</body>
+</html>
