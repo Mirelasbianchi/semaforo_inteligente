@@ -1,9 +1,9 @@
 # 🟢🔴 Semáforo Inteligente com 2 ESP32 — Projeto IoT
 
 ## Sobre o Projeto
-Este projeto implementa um sistema de **semáforos inteligentes** utilizando **dois ESP32**, cada um controlando um semáforo independente. Sensores LDR são usados para detectar a presença de veículos e para alternar automaticamente para o **modo noturno** quando a luminosidade do ambiente diminui.
+Este projeto implementa um sistema de semáforos inteligentes utilizando **dois ESP32, cada um controlando um semáforo independente. Sensores LDR são usados para detectar a presença de veículos e para alternar automaticamente para o **modo noturno** quando a luminosidade do ambiente diminui.
 
-Além disso, o sistema conta com uma **interface online** para controlar parâmetros do semáforo e visualizar em tempo real os dados captados.
+Além disso, o sistema conta com uma interface online para controlar parâmetros do semáforo e visualizar em tempo real os dados captados.
 
 ---
 ## Grupo
@@ -23,56 +23,54 @@ Tictitas (grupo 5)
 
 ## Objetivos
 - Montar dois semáforos físicos com LEDs e ESP32.  
-- Detectar carros simulados usando um **sensor LDR** por variação de luz.  
-- Aplicar lógica de controle com **modo normal** e **modo noturno**.  
+- Detectar carros simulados usando um sensor LDR por variação de luz.  
+- Aplicar lógica de controle com modo normal e modo noturno.  
 - Sincronizar comunicação entre os dois ESP32.  
-- Criar uma **interface web** simples para ajustes do sistema.  
+- Criar uma interface web simples para ajustes do sistema.  
 
 ---
 
 ## Componentes Utilizados
 - 2× ESP32  
 - 1 LDR  
-- 2× Resistores de 10kΩ  
+- 6× Resistores de 10kΩ  
 - LEDs nas cores: vermelho, amarelo e verde (para cada semáforo)  
 - Jumpers, protoboard, fonte USB  
 - Navegador + servidor da interface online
 
----
 
 ## Montagem Física
-Semáforo: mestre
+Semáforo: mestre (master)
 - LED Vermelho → `GPIO 14` 
 - LED Amarelo → `GPIO 27`  
 - LED Verde → `GPIO 26`  
-- LDR (divisor de tensão) → `GPIO ANALÓGICO 34`
+- LDR  → `GPIO ANALÓGICO 34`
 
-Semáforo: escravo
+Semáforo: escravo (slave)
 - LED Vermelho → `GPIO 14` 
 - LED Amarelo → `GPIO 27`  
 - LED Verde → `GPIO 26`  
 
 ## Lógica do Semáforo
 
-### Modo Normal
-- Verde → Amarelo → Vermelho  
+### Modo Diurno
+- Verde → Amarelo → Vermelho
+-  4 segundos no verde, 2 segundos no amarelo e 6 segundos no vermelho
 - Trocas de tempo baseada no fluxo detectado pelo LDR  
 - Se um semáforo ficar verde, o outro vai automaticamente para vermelho
 
 ### Modo Noturno
 - Verde → Amarelo → Vermelho  (maior tempo no verde)
+- 6 segundos no verde, 2 segundos no amarelo e 4 segundos no vermelho
 - Trocas de tempo baseada no fluxo detectado pelo LDR  
 - Se um semáforo ficar verde, o outro vai automaticamente para vermelho
-
----
 
 ## Interface Online
 A interface permite:
 
-- Ativar/desativar o **modo noturno**  
+- Ativar/desativar o modo noturno 
 - Forçar mudança de estado do semáforo  
 - Visualizar em tempo real:
-  - Leitura do LDR  
   - Estado atual do semáforo  
   - Atualizações entre os ESP32  
 
