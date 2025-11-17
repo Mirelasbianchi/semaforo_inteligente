@@ -81,7 +81,7 @@ Abaixo, seguem imagens da interface web.
 <sub>Figura 01: Modo noturno.</sub>
 </div>
 <div align="center">
-<img src="../semaforo_inteligente/assets/modo_noturno.png" alt="Modo noturno" style="max-width:900px; width:100%; height:auto;">
+<img src="../assets/modo_noturno.png" alt="Modo noturno" style="max-width:900px; width:100%; height:auto;">
 </div>
 
 <div align="center">
@@ -92,7 +92,7 @@ Abaixo, seguem imagens da interface web.
 <sub>Figura 02: Modo diurno.</sub>
 </div>
 <div align="center">
-<img src="../semaforo_inteligente/assets/modo_diurno.png" alt="Modo diurno" style="max-width:900px; width:100%; height:auto;">
+<img src="../assets/modo_diurno.png" alt="Modo diurno" style="max-width:900px; width:100%; height:auto;">
 </div>
 
 <div align="center">
@@ -103,7 +103,7 @@ Abaixo, seguem imagens da interface web.
 <sub>Figura 03: Visão geral do website.</sub>
 </div>
 <div align="center">
-<img src="../semaforo_inteligente/assets/site.png" alt="Website - 1" style="max-width:900px; width:100%; height:auto;">
+<img src="../assets/site.png" alt="Website - 1" style="max-width:900px; width:100%; height:auto;">
 </div>
 
 <div align="center">
@@ -114,7 +114,7 @@ Abaixo, seguem imagens da interface web.
 <sub>Figura 04: Visão do website.</sub>
 </div>
 <div align="center">
-<img src="../semaforo_inteligente/assets/web.png" alt="Website - 2" style="max-width:900px; width:100%; height:auto;">
+<img src="../assets/web.png" alt="Website - 2" style="max-width:900px; width:100%; height:auto;">
 </div>
 
 <div align="center">
@@ -131,7 +131,7 @@ No vídeo, mostram-se o funcionamento do semáforo fisicamente, o monitor serial
 <sub>Figura 05: Visão do monitor serial do slave.</sub>
 </div>
 <div align="center">
-<img src="../semaforo_inteligente/assets/serial.png" alt="Visão do monitor serial do slave" style="max-width:900px; width:100%; height:auto;">
+<img src="../assets/serial.png" alt="Visão do monitor serial do slave" style="max-width:900px; width:100%; height:auto;">
 </div>
 
 <div align="center">
